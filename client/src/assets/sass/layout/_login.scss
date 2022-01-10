@@ -1,0 +1,91 @@
+.login{
+    margin: 0;
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: $white-color;
+    border-radius: 1rem;
+    display: flex;
+
+    &--form{
+        // flex: 0 0 50%;
+        width:50%;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 0 4rem;
+        
+        input[type=text],
+        input[type=email],
+        input[type=password]{
+            padding: 1rem;
+            width: 100%;
+            border-radius: 1rem;
+            border: none;
+            box-shadow: $box-shadow-1;
+            border: 1px solid  rgba($color: $drak-color, $alpha: .2);
+        }
+        .checkbox{
+            display: flex;
+            gap: 1rem;
+        }
+
+        // .btn2::before{
+        //     content: '';
+        //     background-image: url("http://localhost:3007/google-icon.png");
+        //     background-repeat: no-repeat;
+        // }
+
+        
+        h2,h3{
+            align-self: center;
+
+        }
+        h3{
+            font-size: 400;
+            color: rgba($color: #000000, $alpha: .6);
+        }
+
+        .btn{
+            align-self: stretch;
+        }
+        
+    }
+
+    &--img{
+        width: 50%;
+        border-radius: 0 1rem 1rem 0;
+    }
+
+}
+
+
+
+@media only screen and (max-width: 1020px) {
+    .login{
+
+        width: 90%;
+    
+    }
+    
+  }
+
+  @media only screen and (max-width: 700px) {
+    .login{
+    
+        &--form{
+            width: 100%;
+        }
+    
+        &--img{
+            display: none;
+        }
+    
+    }
+    
+  }
