@@ -3,11 +3,12 @@ const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("./../utils/errorHandler");
 const { promisify } = require("util");
-const generateToken = (id) => {
-  jwt.sign({ id }, process.env.JWT_SECRET, {
+const adminModel = require("../models/adminModel");
+const generateToken = (id, role) =>
+  jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
-};
+
 exports.login = AsyncCatch(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -38,13 +39,29 @@ exports.login = AsyncCatch(async (req, res, next) => {
 
 exports.signup = AsyncCatch(async (req, res) => {
   const user = req.body;
+  // delete role when we create a cleint
   user.role = undefined;
   let response = await userModel.create(user);
+  console.log(response);
   response.password = undefined;
-  const token = await generateToken(response._id);
+  const token = await generateToken(response._id, response.role);
+  console.log(token);
   res.status(201).json({
     status: "success",
     token,
+    data: response,
+  });
+});
+
+exports.addAdmin = AsyncCatch(async (req, res) => {
+  const addAdmin = req.body;
+  addAdmin.role = "admin";
+  let response = await userModel.create(addAdmin);
+  await adminModel.create({ admin: response.id });
+  response = delete { ...response }.password;
+  console.log(response);
+  res.status(201).json({
+    status: "success",
     data: response,
   });
 });
@@ -58,32 +75,43 @@ exports.protect = AsyncCatch(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(" ").at(-1);
   }
-  if (!token) {
-    return new ErrorHandler({
-      message: "You're not authorized !",
-      statusCode: 401,
-    });
-  }
+  if (!token)
+    return next(
+      new ErrorHandler({
+        message: "You're not authorized !",
+        statusCode: 401,
+      })
+    );
   const decodedToken = await promisify(jwt.verify)(
     token,
     process.env.JWT_SECRET
   );
   const userFresh = await userModel.findById(decodedToken.id);
   if (!userFresh)
-    next(
+    return next(
       new ErrorHandler({
         message: "The user belonging to this token does no longer exist.",
         statusCode: 401,
       })
     );
-  if (userFresh.changedAfter(decodedToken.iat)) {
-    return next(
+  if (await userFresh.changedAfter({ date: decodedToken.iat }))
+    next(
       new ErrorHandler({
         message: "You changed password , you need to login again!",
         statusCode: 401,
       })
     );
-  }
+
+  console.log(decodedToken);
+  if (req.url == "/add-admin" && decodedToken?.role != "admin")
+    next(
+      new ErrorHandler({
+        message:
+          "You are not authorized, you need Authotorization for this action!",
+        statusCode: 401,
+      })
+    );
+
   req.user = userFresh;
   next();
   // some cases we need to promisify function , node actually has a build-in function in util model
