@@ -1,4 +1,5 @@
-const { signup, protect, login, addAdmin } = require("./../Controllers/authController");
+const { signup, login, addAdmin } = require("./../Controllers/authController");
+const { protect } = require("./../middleware/protectRoute");
 const express = require("express");
 const router = express.Router();
 router.route("/signup").post(signup);

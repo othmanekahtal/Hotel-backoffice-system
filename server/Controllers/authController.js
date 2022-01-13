@@ -2,7 +2,6 @@ const AsyncCatch = require("../utils/asyncCatch");
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("./../utils/errorHandler");
-const { promisify } = require("util");
 const adminModel = require("../models/adminModel");
 const generateToken = (id, role) =>
   jwt.sign({ id, role }, process.env.JWT_SECRET, {
@@ -56,64 +55,12 @@ exports.signup = AsyncCatch(async (req, res) => {
 exports.addAdmin = AsyncCatch(async (req, res) => {
   const addAdmin = req.body;
   addAdmin.role = "admin";
-  let response = await userModel.create(addAdmin);
-  await adminModel.create({ admin: response.id });
+  let id = await userModel.create(addAdmin).select('id');
+  let response = await adminModel.create({ admin: id });
   response = delete { ...response }.password;
   console.log(response);
   res.status(201).json({
     status: "success",
     data: response,
   });
-});
-
-exports.protect = AsyncCatch(async (req, res, next) => {
-  /// we need to verify tree layer : token,verification token,check if user is exists ,check if user change password after the token was issued
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ").at(-1);
-  }
-  if (!token)
-    return next(
-      new ErrorHandler({
-        message: "You're not authorized !",
-        statusCode: 401,
-      })
-    );
-  const decodedToken = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_SECRET
-  );
-  const userFresh = await userModel.findById(decodedToken.id);
-  if (!userFresh)
-    return next(
-      new ErrorHandler({
-        message: "The user belonging to this token does no longer exist.",
-        statusCode: 401,
-      })
-    );
-  if (await userFresh.changedAfter({ date: decodedToken.iat }))
-    next(
-      new ErrorHandler({
-        message: "You changed password , you need to login again!",
-        statusCode: 401,
-      })
-    );
-
-  console.log(decodedToken);
-  if (req.url == "/add-admin" && decodedToken?.role != "admin")
-    next(
-      new ErrorHandler({
-        message:
-          "You are not authorized, you need Authotorization for this action!",
-        statusCode: 401,
-      })
-    );
-
-  req.user = userFresh;
-  next();
-  // some cases we need to promisify function , node actually has a build-in function in util model
-  // always try to convert function to asynchronous functions : don't block event loop
 });
