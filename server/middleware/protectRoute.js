@@ -3,6 +3,8 @@ const { promisify } = require("util");
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("./../utils/errorHandler");
+
+const allProtectedURLs = ["/add-admin", "/add-price"];
 exports.protect = AsyncCatch(async (req, res, next) => {
   /// we need to verify tree layer : token,verification token,check if user is exists ,check if user change password after the token was issued
   let token;
@@ -38,7 +40,7 @@ exports.protect = AsyncCatch(async (req, res, next) => {
         statusCode: 401,
       })
     );
-  if (req.url === "/add-admin" && decodedToken?.role !== "admin")
+  if (allProtectedURLs.contains(req.url) && decodedToken?.role !== "admin")
     next(
       new ErrorHandler({
         message:
