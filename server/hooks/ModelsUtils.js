@@ -32,7 +32,8 @@ exports.correctPassword = async ({ candidatePassword, userPassword }) =>
 exports.changedAfter = async ({ date }) => {
   if (this.updatePasswordAt) {
     const parsedDate = this.updatePasswordAt.getTime() / 1000;
-    return parsedDate > date;
+    console.log(`parsed date :${parsedDate}`);
+    return parsedDate < date;
   }
   return false;
 };
