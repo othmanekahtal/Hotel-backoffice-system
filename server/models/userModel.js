@@ -60,7 +60,7 @@ const userSchema = new Schema({
     required: [true, "role will be required"],
     enum: {
       values: ["client", "admin"],
-      message: "Difficulty is either: client, admin",
+      message: "role is either: client, admin",
     },
   },
   updatePasswordAt: Date,
