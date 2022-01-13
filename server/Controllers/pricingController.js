@@ -3,4 +3,4 @@ const pricingModel = require("../models/pricingModel");
 const ErrorHandler = require("./../utils/errorHandler");
 exports.addPrice = AsyncCatch(async (req, res, next) => {
     
-})
+}
