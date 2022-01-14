@@ -4,7 +4,7 @@ const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("./../utils/errorHandler");
 
-const allProtectedURLs = ["/add-admin", "/add-price"];
+const allProtectedURLs = ["/price/add", "/room/add"];
 exports.protect = AsyncCatch(async (req, res, next) => {
   /// we need to verify tree layer : token,verification token,check if user is exists ,check if user change password after the token was issued
   let token;
@@ -40,7 +40,8 @@ exports.protect = AsyncCatch(async (req, res, next) => {
         statusCode: 401,
       })
     );
-  if (allProtectedURLs.contains(req.url) && decodedToken?.role !== "admin")
+  console.log(req.url);
+  if (allProtectedURLs.includes(req.url) && decodedToken?.role !== "admin")
     next(
       new ErrorHandler({
         message:

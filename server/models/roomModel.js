@@ -18,7 +18,7 @@ const roomSchema = new Schema({
   },
   price: {
     type: Schema.Types.ObjectId,
-    ref: "price",
+    ref: "Price",
   },
 });
 module.exports = mongoose.model("room", roomSchema);

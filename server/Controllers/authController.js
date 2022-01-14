@@ -55,10 +55,9 @@ exports.signup = AsyncCatch(async (req, res) => {
 exports.addAdmin = AsyncCatch(async (req, res) => {
   const addAdmin = req.body;
   addAdmin.role = "admin";
-  let id = await userModel.create(addAdmin).select('id');
+  let id = await userModel.create(addAdmin).select("id");
   let response = await adminModel.create({ admin: id });
   response = delete { ...response }.password;
-  console.log(response);
   res.status(201).json({
     status: "success",
     data: response,

@@ -2,13 +2,18 @@ const express = require("express");
 const morgan = require("morgan");
 const server = express();
 const Auth = require("./Routes/authRoutes");
+const reservationRoutes = require("./Routes/reservationRoutes");
+const pricingRoutes = require("./Routes/pricingRoutes");
+const roomRoutes = require("./Routes/roomRoutes");
+
 const errorHandler = require("./utils/errorHandler");
 const errorHandle = require("./Controllers/globalErrorHandler");
 server.use(express.json());
 // for dev only :
 server.use(morgan("dev"));
 server.use(express.static("public/"));
-server.use("/api/v1", Auth);
+server.use("/api/v1", Auth, reservationRoutes, pricingRoutes, roomRoutes);
+
 // if cycle not finished yet At this moment , we have a router that handled in the previous middlewares
 /**
  * all == all verbs put,delete,patch,get,post
