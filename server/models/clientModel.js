@@ -6,6 +6,7 @@ const clientSchema = new Schema({
   admin: {
     type: Schema.Types.ObjectId,
     ref: "user",
+    required: [true, "A client must have a room"],
   },
 });
 

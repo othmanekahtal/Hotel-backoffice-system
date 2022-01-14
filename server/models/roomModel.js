@@ -19,6 +19,7 @@ const roomSchema = new Schema({
   price: {
     type: Schema.Types.ObjectId,
     ref: "Price",
+    required: [true, "A room must have a price"],
   },
 });
 module.exports = mongoose.model("room", roomSchema);

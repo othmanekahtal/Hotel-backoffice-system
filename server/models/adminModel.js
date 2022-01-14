@@ -6,6 +6,7 @@ const adminSchema = new Schema({
   admin: {
     type: Schema.Types.ObjectId,
     ref: "user",
+    required: [true, "A admin must have a user"],
   },
 });
 
