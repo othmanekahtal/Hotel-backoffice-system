@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const server = express();
+// all routes : 
 const Auth = require("./Routes/authRoutes");
 const reservationRoutes = require("./Routes/reservationRoutes");
 const pricingRoutes = require("./Routes/pricingRoutes");
