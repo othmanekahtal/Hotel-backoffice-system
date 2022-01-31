@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
 import useFetch from '../../../hooks/adminUseFetsh';
 
 export const ReservationTable = () => {
     const url = 'http://localhost:6969/api/reservation';
     const { data } = useFetch(url);
 
-const hadnleReserve = (id) => {
-    console.log(id);
-}
+    const hadnleReserve = (id) => {
+        console.log(id);
+    };
     return (
         <div className="inline-block py-2 min-w-full sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow-md sm:rounded-lg">
