@@ -1,40 +1,20 @@
-const express = require("express");
-const morgan = require("morgan");
-const server = express();
-// all routes : 
-const Auth = require("./Routes/authRoutes");
-const reservationRoutes = require("./Routes/reservationRoutes");
-const pricingRoutes = require("./Routes/pricingRoutes");
-const roomRoutes = require("./Routes/roomRoutes");
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+const router = require('./routes/routes')
+const cors = require('cors')
+ require('dotenv').config();
 
-const errorHandler = require("./utils/errorHandler");
-const errorHandle = require("./Controllers/globalErrorHandler");
-server.use(express.json());
-// for dev only :
-server.use(morgan("dev"));
-server.use(express.static("public/"));
-server.use("/api/v1", Auth, reservationRoutes, pricingRoutes, roomRoutes);
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(cors())
 
-// if cycle not finished yet At this moment , we have a router that handled in the previous middlewares
-/**
- * all == all verbs put,delete,patch,get,post
- */
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true ,  useUnifiedTopology: true  }, () => {
+    console.log('Database Connected') 
+})
 
-server.all("*", function (req, res, next) {
-  next(
-    new errorHandler({
-      message: `Can't find ${req.originalUrl} on this server`,
-      statusCode: 404,
-    })
-  );
-});
+app.use('/api/', router)
 
-/*
-we create a central middleware for handle all errors
- */
-server.use(errorHandle);
-/**
- * if we pass any parameter to next() function automatically express will know that was an error
- * when we pass param to next() express skip all middlewares in stack to the error handler
- */
-module.exports = server;
+app.listen(process.env.PORT, () => {
+    console.log(`The server is running at http://localhost:${process.env.PORT}`)
+})

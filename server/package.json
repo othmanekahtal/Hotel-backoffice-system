@@ -1,29 +1,29 @@
 {
-  "name": "node-express",
+  "name": "hotelbooking",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon server.js",
-    "start:production": "NODE_ENV=production nodemon server.js",
-    "debug:dev": "ndb .",
-    "debug:production": "NODE_ENV=production ndb .",
-    "command": "node dev-data/data/comands.js"
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "keywords": [
+    "hotel",
+    "managment",
+    "api"
+  ],
+  "author": "nnafzaoui",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "dotenv": "^11.0.0",
+    "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "5",
-    "morgan": "^1.10.0",
-    "slugify": "^1.6.3",
-    "validator": "^13.7.0"
-  },
-  "devDependencies": {
-    "ndb": "^1.1.5",
-    "nodemon": "^2.0.13"
+    "mongodb": "^4.3.0",
+    "mongoose": "^6.1.6",
+    "nodemailer": "^6.7.2",
+    "nodemon": "^2.0.15"
   }
 }
