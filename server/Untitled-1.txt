@@ -1,0 +1,1 @@
+https: //open-api.openocean.finance/v1/cross/quote?inTokenSymbol=WMATIC&in_token_decimals=18&inTokenAddress=0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270&outTokenSymbol=USDT&outTokenAddress=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&amount=1&gasPrice=32&slippage=3&exChange=openoceanv2&chainId=137
